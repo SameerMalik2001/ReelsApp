@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Verification - ReelsApp</title>
+    <style>
+        /* Reset styles */
+        body, table, td, p {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f4f4f4;
+        }
+
+        table {
+            width: 100%;
+            border-spacing: 0;
+        }
+
+        /* Responsive styles */
+        @media screen and (max-width: 600px) {
+            .email-container {
+                width: 100% !important;
+            }
+            .otp-code {
+                font-size: 24px !important;
+                padding: 12px 20px !important;
+            }
+            .content {
+                padding: 15px !important;
+            }
+            .footer-text {
+                font-size: 10px !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+        <tr>
+            <td align="center" style="padding: 20px;">
+                <table role="presentation" class="email-container" width="100%" max-width="600px" bgcolor="#ffffff" cellspacing="0" cellpadding="0" border="0" style="border-radius: 8px; box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);">
+                    
+                    <!-- Logo -->
+                    <tr>
+                        <td align="center" style="padding: 20px;">
+                            <h2 style="color: #333; margin: 0;">ReelsApp</h2>
+                        </td>
+                    </tr>
+
+                    <!-- OTP Message -->
+                    <tr>
+                        <td align="center" class="content" style="padding: 20px;">
+                            <h3 style="color: #555;">Your OTP Code</h3>
+                            <p style="font-size: 16px; color: #777;">Use the OTP below to complete your verification:</p>
+                            <h1 class="otp-code" style="color: #007BFF; font-size: 28px; margin: 10px 0; padding: 15px 25px; background-color: #eef4ff; display: inline-block; border-radius: 8px;">{{otp}}</h1>
+                            <p style="font-size: 14px; color: #999;">This OTP is valid for 10 minutes.</p>
+                        </td>
+                    </tr>
+
+                    <!-- Footer -->
+                    <tr>
+                        <td align="center" class="content" style="padding: 20px; background-color: #f4f4f4; border-top: 1px solid #ddd;">
+                            <p class="footer-text" style="font-size: 12px; color: #999;">If you didn't request this OTP, please ignore this email.</p>
+                            <p class="footer-text" style="font-size: 12px; color: #999;">&copy; 2024 ReelsApp. All rights reserved.</p>
+                        </td>
+                    </tr>
+
+                </table>
+            </td>
+        </tr>
+    </table>
+
+</body>
+</html>
