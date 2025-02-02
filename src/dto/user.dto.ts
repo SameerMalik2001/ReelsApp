@@ -11,4 +11,9 @@ export const updateUserSchema = z.object({
   email: z.string().email("Invalid email format"), // Built-in email validation
 });
 
+export const loginUserSchema = z.object({
+  email: z.string().email("Invalid email format"), // Built-in email validation
+  password: z.string().min(6, "Password must be at least 6 characters"), // Password must be strong
+});
+
 export type CreateUserDTO = z.infer<typeof CreateUserSchema>; // TypeScript type from Zod schema
