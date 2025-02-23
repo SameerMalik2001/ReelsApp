@@ -16,7 +16,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (types === "register") {
       return registerUser(req, res);
     } else if (types === "login") {
-      return loginUser(req, res);
+      return loginUserService(req, res);
     } else {
       return res.status(400).json({ msg: MESSAGES?.INVALID_ACTION_TYPE });
     }
@@ -47,6 +47,15 @@ export async function registerUser(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
+async function loginUserService(req: NextApiRequest, res: NextApiResponse) {
+  try {
+    const result = await loginUser(req, res);
+    return res.status(201).json(result);
+  } catch(error) {
+    res.status(500).json({msg: MESSAGES?.LOGIN_FAILED, error: error});
+  }
+}
+
 export async function loginUser(req: NextApiRequest, res: NextApiResponse) {
   try {
     const validatedData = loginUserSchema.parse(req.body);
@@ -56,7 +65,7 @@ export async function loginUser(req: NextApiRequest, res: NextApiResponse) {
 
     const existingUser = await User.findOne({ email: EmailInLowerCase });
     if (!existingUser) {
-      return MESSAGES?.EMAIL_NOT_EXISTS //Email is not valid
+      return { msg: MESSAGES?.EMAIL_NOT_EXISTS }
     }
 
     const hashedPassword = await bcrypt.compare(password, existingUser.password);
@@ -74,7 +83,7 @@ export async function loginUser(req: NextApiRequest, res: NextApiResponse) {
     );
 
     return {
-      message: MESSAGES?.LOGIN_SUCCESSFULLY,
+      msg: MESSAGES?.LOGIN_SUCCESSFULLY,
       user: freshUser,
       token: token
     }

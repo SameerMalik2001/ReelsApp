@@ -75,40 +75,37 @@ async function validateOtp(req: NextApiRequest, res: NextApiResponse) {
 
     // check if the email is present in otp collection
     const existingOtp = await Otp.findOne({ email: EmailInLowerCase });
-    if (!existingOtp) {
-      return res.status(404).json({ msg: MESSAGES?.EMAIL_NOT_EXISTS });
+    if (existingOtp) {
+      // check if otp is correct
+      if(existingOtp.otp === otp) {
+        //create user
+        const result = await registerUser(req, res);
+        if(result.msg === MESSAGES.USER_CREATED_SUCCESSFULLY) {
+          // login user
+          const loginU = await loginUser(req, res);
+          if(loginU?.msg === MESSAGES.LOGIN_SUCCESSFULLY) {
+            return res.status(200).json({
+              msg: MESSAGES?.USER_CREATED_SUCCESSFULLY,
+              success: true,
+              user: loginU.user,
+              token: loginU.token
+            });
+          } else {
+            return res.status(403).json({ msg: MESSAGES?.LOGIN_FAILED });
+          }
+        }
+      } else {
+        return res.status(403).json({ msg: MESSAGES?.OTP_NOT_VALID });
+      }
+    } else {
+      return res.status(404).json({ msg: MESSAGES?.OTP_NOT_FOUND });
     }
 
-    // check if otp is valid and less then 15 minutes ago
-    const currentTime = new Date();
-    const otpTime = new Date(existingOtp.createdAt);
-    const diffTime = Math.abs(currentTime.getTime() - otpTime.getTime());
-    const diffMinutes = Math.ceil(diffTime / (1000 * 60));
-
-    if (diffMinutes > 15) {
-      return res.status(403).json({ msg: MESSAGES?.OTP_EXPIRED });
-    }
-
-    if (otp === existingOtp.otp) {
-      //delete existing document
-      await Otp.findByIdAndDelete(existingOtp.id);
-
-      // create new user
-      await registerUser(req, res);
-      const result = await loginUser(req, res);
-
-      return res.status(200).json({
-        message: MESSAGES?.OTP_VALID,
-        success: true,
-        result
-      });
-    }
-
-    return res.status(401).json({
-      message: MESSAGES?.OTP_NOT_VALID,
-      success: false
+    return res.status(200).json({
+      msg: MESSAGES?.USER_CREATED_SUCCESSFULLY,
+      success: true,
     });
   } catch (error) {
-    return res.status(400).json({ message: MESSAGES?.OPT_VALIDATION_FAIL, errors: error });
+    return res.status(400).json({ msg: MESSAGES?.FAIL_TO_SEND_OTP, errors: error });
   }
 }
